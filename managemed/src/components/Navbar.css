@@ -6,9 +6,10 @@
   padding: 0.8rem 1.5rem;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: center; /* Vertically center the navbar items */
   color: #fff;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative; /* Make the navbar the reference point for absolute positioning */
 }
 
 /* Navigation menu styles */
@@ -59,9 +60,10 @@
 
 /* Logout notification styles */
 .logout-notification {
-  position: fixed;
-  top: 10px;
-  right: 10px;
+  position: absolute;  /* Position relative to the navbar */
+  top: 50%;            /* Vertically center it */
+  right: 10px;         /* Position it to the right */
+  transform: translateY(-50%); /* Fine-tune vertical centering */
   background-color: #444;
   color: #fff;
   padding: 0.5rem 1rem;

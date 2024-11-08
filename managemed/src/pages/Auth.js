@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { auth, database } from '../firebaseConfig';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut } from 'firebase/auth';
 import { ref, set } from 'firebase/database';
 import './Auth.css';
 
@@ -11,6 +11,7 @@ function Auth() {
   const [notification, setNotification] = useState('');
   const [resetPassword, setResetPassword] = useState(false);
   const [isResetSent, setIsResetSent] = useState(false); // New state to track the reset status
+  const [isAccountCreated, setIsAccountCreated] = useState(false); // Track if account has been created
 
   // Display a temporary message for 2 seconds
   const showMessage = (message) => {
@@ -64,15 +65,22 @@ function Auth() {
           email: user.email,
           createdAt: new Date().toISOString(),
         });
-        showMessage(`Account created successfully for ${user.email}!`);
-      }
 
-      // Clear fields after successful authentication
-      setEmail('');
-      setPassword('');
+        // Notify user that the account has been created
+        showMessage(`Your account has been created successfully!`);
+
+        // Log the user out after account creation
+        await signOut(auth);
+
+        // Switch to the login form after successful registration
+        setIsAccountCreated(true);
+        setIsLogin(true); // Automatically go to login form after registration
+        setEmail('');
+        setPassword('');
+      }
     } catch (error) {
-      if (error.code === 'auth/wrong-password') {
-        showMessage('Incorrect password. Please try again.');
+      if (error.code === 'auth/invalid-credential') {
+        showMessage('Incorrect credentials. Check your email and password.');
       } else if (error.code === 'auth/user-not-found') {
         showMessage('No account found with this email address.');
       } else {

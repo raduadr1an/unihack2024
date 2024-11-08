@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
 import './Navbar.css';
 
 function Navbar({ user }) {
   const [logoutMessage, setLogoutMessage] = useState('');
+  const navigate = useNavigate(); // Create navigate function
 
   // Handle user logout
   const handleLogout = async () => {
@@ -21,13 +22,24 @@ function Navbar({ user }) {
     }, 2000);
   };
 
+  // Navigate to the Management page when logged in
+  const handleGoToManagement = () => {
+    navigate('/management');
+  };
+
   return (
     <nav className="navbar">
       <ul className="nav-menu">
         <li className="nav-item">
           <Link to="/" className="nav-link">Home</Link>
         </li>
-        {!user && (
+
+        {/* Show 'Go to Management' button instead of 'Login' when the user is logged in */}
+        {user ? (
+          <li className="nav-item">
+            <Link to="/management" className="nav-link">Management</Link>
+         </li>
+        ) : (
           <li className="nav-item">
             <Link to="/auth" className="nav-link">Login</Link>
           </li>
