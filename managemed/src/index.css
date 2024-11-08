@@ -11,3 +11,28 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+/* Default styles for larger screens (desktop/tablet) */
+.container {
+  display: flex;
+  padding: 20px;
+}
+
+/* Mobile Styles: Apply styles for screens smaller than 768px */
+@media (max-width: 768px) {
+  .container {
+    display: block; /* Stack items vertically */
+    padding: 10px;
+  }
+
+  .slideshow {
+    height: 200px; /* Reduce height for smaller screens */
+  }
+
+  h1 {
+    font-size: 1.5rem; /* Smaller font size */
+  }
+
+  p {
+    font-size: 1rem;
+  }
+}
