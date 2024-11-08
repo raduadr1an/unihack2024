@@ -1,5 +1,5 @@
 import React from 'react';
-import HospitalData from '../components/HospitalData';
+import HospitalData from '../components/HospitalData/HospitalData';
 function Home() {
   return (<div>
     <h1>Home Page</h1>

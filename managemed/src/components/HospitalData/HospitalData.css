@@ -1,0 +1,20 @@
+.container {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .box {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  .hierarchy {
+    width: 60%;
+    overflow-y: auto;
+  }
+  
+  .form {
+    width: 35%;
+  }
