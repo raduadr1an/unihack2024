@@ -1,0 +1,28 @@
+.slideshow {
+    width: 750px;
+    height: 400px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    margin-top: -20px;
+  }
+  
+  .slideshow img {
+    width: 100%;
+    margin-top: 60px;
+    height: auto;
+    object-fit: cover; 
+  }
+  
+  h1 {
+    font-size: 2rem;
+    color: #333;
+  }
+  
+  p {
+    font-size: 1rem;
+    color: #555;
+  }
+  #slideimg{
+    width: 760px;
+    height: 560px;
+  }
