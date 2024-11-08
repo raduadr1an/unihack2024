@@ -1,0 +1,119 @@
+/* Container styling */
+.auth-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+/* Form styling */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Input styling */
+input {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: border-color 0.3s ease;
+}
+
+input:focus {
+  border-color: #d9534f; /* Red color on focus */
+  outline: none;
+}
+
+/* Button styling */
+button {
+  padding: 10px;
+  font-size: 1rem;
+  background-color: #d9534f; /* Red color */
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #c9302c; /* Darker red on hover */
+}
+
+/* Forgot password text and back-to-login link */
+.auth-form p {
+  text-align: center;
+}
+
+.auth-form button[type="button"] {
+  background-color: transparent;
+  color: #d9534f; /* Red color */
+  border: none;
+  cursor: pointer;
+}
+
+.auth-form button[type="button"]:hover {
+  text-decoration: underline;
+  color: #c9302c; /* Darker red on hover */
+}
+
+/* Message styles (success or error notifications) */
+.message {
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Success message */
+.success {
+  background-color: #f2dede; /* Light red background */
+  color: #a94442; /* Dark red text */
+  border: 1px solid #ebccd1; /* Light red border */
+}
+
+/* Error message */
+.error {
+  background-color: #f8d7da; /* Light pinkish red background */
+  color: #721c24; /* Dark red text */
+  border: 1px solid #f5c6cb; /* Light pinkish red border */
+}
+
+/* Notification message styling */
+.notification {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background-color: #d9534f; /* Red background */
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  z-index: 1000;
+  text-align: center;
+  animation: fadeOut 2s forwards;
+}
+
+.notification.error {
+  background-color: #c9302c; /* Darker red for error */
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
