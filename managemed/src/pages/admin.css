@@ -1,0 +1,101 @@
+
+.admin-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1 {
+    text-align: center;
+    color: #333;
+    font-size: 2rem;
+  }
+  
+  h2 {
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .add-user-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .input-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .input-group label {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 5px;
+  }
+  
+  .input-group input {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100%;
+  }
+  
+  .input-group input:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+  
+  .add-user-button,
+  .save-username-button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 200px;
+    align-self: center;
+  }
+  
+  .add-user-button:hover,
+  .save-username-button:hover {
+    background-color: #218838;
+  }
+  
+  .add-user-button:disabled,
+  .save-username-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+
+  p {
+    text-align: center;
+    font-size: 1rem;
+  }
+  
+  p[style*="green"] {
+    color: green;
+  }
+  
+  p[style*="red"] {
+    color: red;
+  }
+    p.access-denied {
+    color: #dc3545;
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: bold;
+    padding: 20px;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+  }
+  
