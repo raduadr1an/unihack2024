@@ -1,121 +1,101 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { auth, database } from '../firebaseConfig';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut } from 'firebase/auth';
-import { ref, set } from 'firebase/database';
-import './Auth.css';
+import { set, ref } from 'firebase/database';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import './Auth.css'
 
 function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLogin, setIsLogin] = useState(true);
   const [notification, setNotification] = useState('');
-  const [resetPassword, setResetPassword] = useState(false);
-  const [isResetSent, setIsResetSent] = useState(false); // New state to track the reset status
-  const [isAccountCreated, setIsAccountCreated] = useState(false); // Track if account has been created
+  const navigate = useNavigate(); // Initialize the useNavigate hook
 
-  // Display a temporary message for 2 seconds
+  // Regex for basic email and password validation
+  const isPasswordValid = (password) => /^(?=.*\d)[A-Za-z\d]{8,}$/.test(password);
+  const isEmailValid = (email) => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
+
+  useEffect(() => {
+    if (auth.currentUser) {
+      navigate('/management'); // Redirect to management page if user is logged in
+    }
+  }, []);
+
+  // Function to show a notification message
   const showMessage = (message) => {
     setNotification(message);
     setTimeout(() => {
       setNotification('');
-    }, 2000);
+    }, 3000); // Display for 3 seconds
   };
 
-  // Validate password requirements
-  const isPasswordValid = (password) => {
-    const passwordRegex = /^(?=.*\d)[A-Za-z\d]{8,}$/;
-    return passwordRegex.test(password);
-  };
-
-  // Validate email format
-  const isEmailValid = (email) => {
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return emailRegex.test(email);
-  };
-
-  // Handle form submission for login or signup
+  // Main authentication handler
   const handleAuth = async (e) => {
     e.preventDefault();
 
-    // Email and password validation
-    if (!isEmailValid(email)) {
-      showMessage('Please enter a valid email address.');
-      setEmail('');
-      return;
-    }
-
-    if (!isPasswordValid(password)) {
-      showMessage('Password must be at least 8 characters long and include at least one digit.');
-      setPassword('');
+    // Validate email and password
+    if (!isEmailValid(email) || !isPasswordValid(password)) {
+      showMessage('Invalid email or password. Password must be at least 8 characters long and include a digit.');
       return;
     }
 
     try {
       if (isLogin) {
-        // Login with Firebase Authentication
+        // Logging in the user
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        showMessage(`Welcome back, ${userCredential.user.email}!`);
+        const user = userCredential.user;
+
+        // Check if email is verified
+        if (!user.emailVerified) {
+          await auth.signOut();  // Log the user out if email is not verified
+          return;
+        }
+
+        // Navigate to the /management page after successful login
+        showMessage(`Welcome back, ${user.email}! You have successfully logged in.`);
+        navigate('/management');  // Redirect to the management page
       } else {
-        // Sign up with Firebase Authentication
+        // Registering a new user
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        // Store user information in Realtime Database
+        // Send verification email
+        await sendEmailVerification(user);
+
+        // Setting up a default 'pacient' role in the database
         await set(ref(database, `users/${user.uid}`), {
           email: user.email,
           createdAt: new Date().toISOString(),
+          accountType: 'pacient',
         });
 
-        // Notify user that the account has been created
-        showMessage(`Your account has been created successfully!`);
-
-        // Log the user out after account creation
-        await signOut(auth);
-
-        // Switch to the login form after successful registration
-        setIsAccountCreated(true);
-        setIsLogin(true); // Automatically go to login form after registration
         setEmail('');
         setPassword('');
+	navigate('/management');
       }
     } catch (error) {
+      // Error handling
+      console.error('Error during authentication:', error);
+
       if (error.code === 'auth/invalid-credential') {
-        showMessage('Incorrect credentials. Check your email and password.');
-      } else if (error.code === 'auth/user-not-found') {
-        showMessage('No account found with this email address.');
+        showMessage('Incorrect password or email. Please try again.');
+      } else if (error.code === 'auth/email-already-in-use') {
+        showMessage('There already exists an account associated with this email address.');
       } else {
-        showMessage(`Error: ${error.message}`);
+        showMessage('An unexpected error occurred. Please try again.');
       }
-      setPassword(''); // Clear the password field in case of error but keep email
-    }
-  };
-
-  // Handle password reset
-  const handlePasswordReset = async () => {
-    if (!isEmailValid(email)) {
-      showMessage('Please enter a valid email address.');
-      return;
-    }
-
-    try {
-      await sendPasswordResetEmail(auth, email);
-      showMessage('Password reset email sent. Please check your inbox.');
-
-      // Hide the reset section after 2 seconds
-      setIsResetSent(true);
-      setTimeout(() => {
-        setResetPassword(false);
-        setIsResetSent(false); // Reset the state after hiding the section
-      }, 2000);
-    } catch (error) {
-      showMessage(`Error: ${error.message}`);
+      setPassword('');
     }
   };
 
   return (
     <div className="auth-container">
       <h1>{isLogin ? 'Login' : 'Register'}</h1>
+
+      {/* Notification message */}
       {notification && <div className="notification">{notification}</div>}
+
       <form onSubmit={handleAuth} className="auth-form">
         <input
           type="email"
@@ -132,29 +112,12 @@ function Auth() {
           required
         />
         <button type="submit">{isLogin ? 'Login' : 'Register'}</button>
-        {isLogin && !resetPassword && (
-          <p>
-            Forgot your password?{' '}
-            <button type="button" onClick={() => setResetPassword(true)}>
-              Reset Password
-            </button>
-          </p>
-        )}
-        {resetPassword && !isResetSent && (
-          <div>
-            <p>We will send a password reset email to {email}</p>
-            <button type="button" onClick={handlePasswordReset}>
-              Send Reset Email
-            </button>
-          </div>
-        )}
-        {isResetSent && (
-          <p>Password reset email sent. Please check your inbox.</p>
-        )}
+
+        {/* Toggle between Login and Register */}
         <p>
-          {isLogin ? 'New here?' : 'Already have an account?'}{' '}
+          {isLogin ? "Don't have an account?" : 'Already have an account?'}{' '}
           <button type="button" onClick={() => setIsLogin(!isLogin)}>
-            {isLogin ? 'Create an account' : 'Login'}
+            {isLogin ? 'Register' : 'Login'}
           </button>
         </p>
       </form>

@@ -29,7 +29,7 @@
 }
 
 .nav-link:hover {
-  color: #00bfff;
+  color: #ff6666;
 }
 
 /* User information styles */
@@ -64,12 +64,13 @@
   top: 50%;            /* Vertically center it */
   right: 10px;         /* Position it to the right */
   transform: translateY(-50%); /* Fine-tune vertical centering */
-  background-color: #444;
-  color: #fff;
+  background-color: #d9534f; /* Red background */
+  color: white;
   padding: 0.5rem 1rem;
   border-radius: 5px;
   font-size: 0.9rem;
-  opacity: 0.9;
+  z-index: 1000;
+  text-align: center;
   animation: fadeOut 2s forwards;
 }
 
