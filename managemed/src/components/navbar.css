@@ -73,3 +73,20 @@ ul li a.active {
   font-weight: bold;
   border-bottom: 2px solid #0d1116; 
 }
+#logout{
+  background-color: red;
+  padding: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 10px;
+}
+#logout:hover{
+  background-color:rgb(45, 86, 183);
+  padding: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  border: red solid 2px;
+  color:red;
+  border-radius: 10px;
+  transition: 1s;
+}

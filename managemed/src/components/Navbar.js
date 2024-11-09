@@ -1,22 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom'; 
 import './navbar.css';
 import { auth } from '../firebaseConfig';
 import logo from '../assets/hospital.svg';
 
 function Navbar() {
   const location = useLocation();
+  const navigate = useNavigate(); 
   const [user, setUser] = useState(null);
 
-  // Check if a user is logged in when the component mounts
   useEffect(() => {
-    const currentUser = auth.currentUser;
-    setUser(currentUser);
 
-    // Optionally, you could subscribe to changes in auth state
-    // auth.onAuthStateChanged(setUser);
+    const unsubscribe = auth.onAuthStateChanged(setUser);
 
-  }, []);
+    return () => unsubscribe();
+  }, []); 
+
+  const handleLogout = async () => {
+    try {
+      await auth.signOut();
+      navigate('/login');  
+    } catch (error) {
+      console.error("Error logging out: ", error.message);
+    }
+  };
 
   return (
     <nav>
@@ -32,7 +39,7 @@ function Navbar() {
             Home
           </Link>
         </li>
-        {!user && (
+        {!user ? (
           <li>
             <Link
               to="/login"
@@ -41,16 +48,20 @@ function Navbar() {
               LogIn
             </Link>
           </li>
-        )}
-        {user && (
-          <li>
-            <Link
-              to="/profile"
-              className={location.pathname === '/profile' ? 'active' : ''}
-            >
-              Profile
-            </Link>
-          </li>
+        ) : (
+          <>
+            <li>
+              <Link
+                to="/profile"
+                className={location.pathname === '/profile' ? 'active' : ''}
+              >
+                Profile
+              </Link>
+            </li>
+            <li onClick={handleLogout} id='logout'>
+              LogOut
+            </li>
+          </>
         )}
       </ul>
     </nav>

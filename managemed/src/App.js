@@ -6,7 +6,8 @@ import Profile from './pages/Profile';
 import NoUser from './pages/Nouser';
 import Navbar from './components/Navbar';
 import ForgotPassword from './pages/ForgetPassword'; 
-
+import Admin from './pages/Admin';
+import ProtectedRoute from './components/ProtectedRoute';
 function App() {
   return (
     <Router> {/* Use BrowserRouter here */}
@@ -17,6 +18,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/nouser" element={<NoUser />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route   path="/admin" element={<Admin />} />
       </Routes>
     </Router>
   );

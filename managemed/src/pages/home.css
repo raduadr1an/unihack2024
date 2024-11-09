@@ -37,7 +37,7 @@
 .options {
   width: 200px;
   position: fixed;
-  top: 10;
+  top: 1;
   left: 0;
   height: 100%;
   padding-top: 50px;
@@ -123,4 +123,16 @@ body {
 #map {
   min-width: 400px;
   min-height: auto;
+}
+.hidden-details{
+  display: none;
+}
+.hospital-options ul{
+  font-size: 12px;
+  list-style: none;
+  padding: 0;
+}
+
+.hospitals .flex{
+  justify-content: space-between;
 }
