@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../firebaseConfig"; 
 import { useNavigate } from "react-router-dom";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 
 function Admin() {
   const [email, setEmail] = useState("");
@@ -11,13 +11,12 @@ function Admin() {
   const [username, setUsername] = useState(""); 
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [isAdmin, setIsAdmin] = useState(false);  // Default to false until verified
+  const setIsAdmin = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const currentUser = auth.currentUser;
     if (currentUser) {
-      // Only allow access if the logged-in user is the admin (hardcoded email check)
       setIsAdmin(currentUser.email === "admin@managemd.unihack");
       if (currentUser.email === "admin@managemd.unihack") {
         fetchUsername(currentUser.uid);
@@ -28,7 +27,7 @@ function Admin() {
     } else {
     //   navigate('/login');  // Redirect if no user is logged in
     }
-  }, [navigate]);
+  }, [navigate, setIsAdmin]);
 
   const fetchUsername = async (uid) => {
     const userRef = doc(db, "admins", uid);
@@ -37,15 +36,6 @@ function Admin() {
     if (userDoc.exists()) {
       setUsername(userDoc.data().username);
     }
-  };
-  const handleLogout = () => {
-    auth.signOut()
-      .then(() => {
-        navigate("/login"); 
-      })
-      .catch((error) => {
-        console.error("Error logging out: ", error);
-      });
   };
 
   const handleAddUser = async (e) => {
@@ -61,24 +51,6 @@ function Admin() {
       setSuccessMessage("");
     }
   };
-  
-  const handleSaveUsername = async () => {
-    try {
-      const currentUser = auth.currentUser;
-      if (currentUser) {
-        const userRef = doc(db, "admins", currentUser.uid);
-        await setDoc(userRef, { username }, { merge: true });
-        setSuccessMessage("Username updated successfully!");
-      }
-    } catch (error) {
-      setErrorMessage("Error saving username: " + error.message);
-    }
-  };
-
-  // If not admin, show an access denied message
-//   if (!isAdmin) {
-//     return <p>You do not have access to this page.</p>;
-//   }
 
   return (
     <div className="admin-container">

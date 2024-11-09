@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { auth } from '../firebaseConfig';
-import { Link, useNavigate } from 'react-router-dom';
-import HospitalData from '../components/HospitalData/HospitalData';
+import { useNavigate } from 'react-router-dom';
 
 function Profile() {
   const [userData, setUserData] = useState(null);

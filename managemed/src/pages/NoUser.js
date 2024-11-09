@@ -1,10 +1,8 @@
 import './nouser.css';
-import React, { useEffect, useState } from 'react';
-import { auth } from '../firebaseConfig';
-import { useNavigate } from 'react-router-dom';
-import noimg from '../assets/x.png'; // Correct default import
+import React from 'react';
+import noimg from '../assets/x.png';
 
-function Nouser() {
+function NoUser() {
     return (
         <>
          <div className="no-user-container">
@@ -17,4 +15,4 @@ function Nouser() {
         </>
     );
 }
-export default Nouser;
+export default NoUser;

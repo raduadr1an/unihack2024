@@ -1,20 +1,16 @@
-// src/components/Login.js
 import React, { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase-config"; // import the Firebase auth object
+import { signInWithEmailAndPassword, auth } from "firebase/auth";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
 
-  // Handle login form submission
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      // Redirect to a different page or update the state after successful login
       alert("Login successful!");
     } catch (error) {
       setError(error.message);

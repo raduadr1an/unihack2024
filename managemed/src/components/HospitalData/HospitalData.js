@@ -5,7 +5,7 @@ import "./HospitalData.css";
 
 function HospitalData() {
   const [hospitals, setHospitals] = useState([]);
-  const [hospitalName, setHospitalName] = useState(""); // For new hospital
+  const [hospitalName, setHospitalName] = useState(""); 
   const [levelName, setLevelName] = useState("");
   const [roomNumber, setRoomNumber] = useState("");
   const [patientDetails, setPatientDetails] = useState({
@@ -16,19 +16,12 @@ function HospitalData() {
     pacientStatus: ""
   });
 
-  const [hospitalID1, setHospitalID1] = useState(""); // selected hospital ID
-  const [levelID1, setLevelID1] = useState(""); // selected level ID
-  const [roomID1, setRoomID1] = useState(""); // selected room ID
+  const [hospitalID1, setHospitalID1] = useState(""); 
+  const [levelID1, setLevelID1] = useState(""); 
+  const [roomID1, setRoomID1] = useState("");
 
-  // State to manage current page (Hospital, Level, Room)
-  const [currentPage, setCurrentPage] = useState("hospitals"); // "hospitals", "hospital", "level", "room"
+  const [currentPage, setCurrentPage] = useState("hospitals");
 
-  // States to handle expansion of hospitals, levels, and rooms
-  const [expandedHospitals, setExpandedHospitals] = useState({});
-  const [expandedLevels, setExpandedLevels] = useState({});
-  const [expandedRooms, setExpandedRooms] = useState({});
-
-  // Fetching data from Firebase Realtime Database
   useEffect(() => {
     const hospitalsRef = ref(database, "hospital");
 
@@ -46,7 +39,6 @@ function HospitalData() {
     return () => unsubscribe();
   }, []);
 
-  // Function to add a new hospital
   const addHospital = () => {
     const hospitalsRef = ref(database, "hospital");
     const newHospitalRef = push(hospitalsRef);
@@ -54,7 +46,6 @@ function HospitalData() {
     setHospitalName("");
   };
 
-  // Function to add a new level to a hospital
   const addLevel = () => {
     const levelsRef = ref(database, `hospital/${hospitalID1}/floor`);
     const newLevelRef = push(levelsRef);
@@ -62,7 +53,6 @@ function HospitalData() {
     setLevelName("");
   };
 
-  // Function to add a new room to a level
   const addRoom = () => {
     const roomsRef = ref(database, `hospital/${hospitalID1}/floor/${levelID1}/roomInfo`);
     const newRoomRef = push(roomsRef);
@@ -70,7 +60,6 @@ function HospitalData() {
     setRoomNumber("");
   };
 
-  // Function to add a new patient to a room
   const addPatient = () => {
     const patientsRef = ref(database, `hospital/${hospitalID1}/floor/${levelID1}/roomInfo/${roomID1}/pacientInfo`);
     const newPatientRef = push(patientsRef);
@@ -84,55 +73,26 @@ function HospitalData() {
     });
   };
 
-  // Function to delete a hospital
   const deleteHospital = (hospitalID) => {
     const hospitalRef = ref(database, `hospital/${hospitalID}`);
     remove(hospitalRef);
   };
 
-  // Function to delete a level from a hospital
   const deleteLevel = (hospitalID, levelID) => {
     const levelRef = ref(database, `hospital/${hospitalID}/floor/${levelID}`);
     remove(levelRef);
   };
 
-  // Function to delete a room from a level
   const deleteRoom = (hospitalID, levelID, roomID) => {
     const roomRef = ref(database, `hospital/${hospitalID}/floor/${levelID}/roomInfo/${roomID}`);
     remove(roomRef);
   };
 
-  // Function to delete a patient from a room
   const deletePatient = (hospitalID1, levelID1, roomID1, patientKey) => {
     const patientRef = ref(database, `hospital/${hospitalID1}/floor/${levelID1}/roomInfo/${roomID1}/pacientInfo/${patientKey}`);
     remove(patientRef);
   };
 
-  // Function to toggle the expansion of a hospital
-  const toggleHospitalExpansion = (hospitalID) => {
-    setExpandedHospitals((prevExpandedHospitals) => ({
-      ...prevExpandedHospitals,
-      [hospitalID]: !prevExpandedHospitals[hospitalID],
-    }));
-  };
-
-  // Function to toggle the expansion of a level
-  const toggleLevelExpansion = (hospitalID, levelID) => {
-    setExpandedLevels((prevExpandedLevels) => ({
-      ...prevExpandedLevels,
-      [`${hospitalID}_${levelID}`]: !prevExpandedLevels[`${hospitalID}_${levelID}`],
-    }));
-  };
-
-  // Function to toggle the expansion of a room
-  const toggleRoomExpansion = (hospitalID, levelID, roomID) => {
-    setExpandedRooms((prevExpandedRooms) => ({
-      ...prevExpandedRooms,
-      [`${hospitalID}_${levelID}_${roomID}`]: !prevExpandedRooms[`${hospitalID}_${levelID}_${roomID}`],
-    }));
-  };
-
-  // Function to handle navigation
   const navigateToHospital = (hospitalID) => {
     setHospitalID1(hospitalID);
     setCurrentPage("hospital");
@@ -148,7 +108,6 @@ function HospitalData() {
     setCurrentPage("room");
   };
 
-  // Render the current page
   const renderPage = () => {
     switch (currentPage) {
       case "hospitals":
@@ -265,7 +224,6 @@ function HospitalData() {
                     }
                     placeholder="Diagnosis"
                   />
-               
                  
                   <input
                     type="text" 

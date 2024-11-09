@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getDatabase } from "firebase/database";
-import { getFirestore } from "firebase/firestore";  // Import getFirestore for Firestore
+import { getFirestore } from "firebase/firestore"; // to be removed if no use db 
 
 const firebaseConfig = {
   apiKey: "AIzaSyCMW8Rb1sGFAtXxN_RGR0Eql_hLwGP4vL4",
@@ -14,12 +14,9 @@ const firebaseConfig = {
   measurementId: "G-CSSPSMW70D"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-// Initialize Firestore and Auth
 const auth = getAuth(app);
-const db = getFirestore(app);  // Initialize Firestore here
+const db = getFirestore(app);
 const database = getDatabase(app);
-// Export auth and db for use in other files
+
 export { auth, db , database};
