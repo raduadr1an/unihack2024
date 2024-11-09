@@ -1,30 +1,25 @@
-import Navbar from './components/Navbar';
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Change here
 import Home from './pages/Home';
-import Auth from './pages/Auth';
-<<<<<<< Updated upstream
-=======
-import logo from './assets/hospital.svg';
-import './App.css';
-import Profile from './pages/Profile.js';   
-import Login from './pages/Auth.js';     
-import Nouser from './pages/Nouser.js';
->>>>>>> Stashed changes
+import Login from './pages/Auth';
+import Profile from './pages/Profile';
+import NoUser from './pages/Nouser';
+import Navbar from './components/Navbar';
+import ForgotPassword from './pages/ForgetPassword'; 
 
 function App() {
   return (
-    // Navigation bar
-    <Router>
+    <Router> {/* Use BrowserRouter here */}
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/auth" element={<Login />} />
-        <Route path="/nouser" element={<Nouser />} /> 
+        <Route path="/nouser" element={<NoUser />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
       </Routes>
     </Router>
-
   );
 }
+
 export default App;

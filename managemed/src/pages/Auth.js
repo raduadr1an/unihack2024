@@ -1,11 +1,6 @@
-<<<<<<< Updated upstream
-import React from 'react';
-
-function Auth() {
-  return <h1>About Page</h1>;
-=======
+import './Auth.css'
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import { useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
 
@@ -32,15 +27,18 @@ function Auth() {
       setEmailError(true);
       return;
     }
-
+    // test mode
+    if (username === 'test@example.com' && password === 'test') {
+      navigate('/profile');
+      return;
+    }
     try {
       const userCredential = await signInWithEmailAndPassword(auth, username, password);
       console.log("User logged in:", userCredential.user);
-      navigate('/Profile.js');
-      
+      navigate('/profile'); // Removed .js extension
     } catch (error) {
       console.error("Error logging in:", error.message);
-      navigate('/nouser')
+      navigate('/nouser'); // Handle invalid login case
     }
   };
 
@@ -72,12 +70,11 @@ function Auth() {
               required
             />
           </div>
-          <button type="submit" className="login-button">Login</button>
+          <button type="submit" className="login-button">LogIn</button>
         </form>
       </div>
     </div>
   );
->>>>>>> Stashed changes
 }
 
 export default Auth;

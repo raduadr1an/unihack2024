@@ -15,11 +15,14 @@ function Profile() {
         uid: user.uid,
       });
     } else {
-      navigate('/login');
+      // navigate('/login');
     }
   }, [navigate]);
 
-  if (!userData) return <p>Loading...</p>;
+  if (!userData) {
+    return <p>Loading...</p>;
+  }
+     
 
   return (
     <div className="profile-container">
