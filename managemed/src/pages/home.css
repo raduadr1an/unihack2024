@@ -23,16 +23,7 @@
     width: 760px;
     height: 560px;
   }
-.flex {
-  display: flex;
-  margin-top: 90px;
 
-  justify-content: flex-start;
-  align-items: flex-start;
-  min-height: 100vh;
-  padding-top: 20px;
-  padding-left: 20px;
-}
 
 .options {
   width: 200px;
@@ -71,7 +62,6 @@
 
 /* Content area */
 .show {
-  margin-left: 220px; /* Offset by the width of the sidebar */
   padding: 20px;
   flex-grow: 1;
   transition: margin-left 0.3s;
@@ -116,7 +106,6 @@ a:hover {
 
 /* Optional: For the body */
 body {
-  margin: 0;
   font-family: Arial, sans-serif;
 }
 
@@ -133,6 +122,3 @@ body {
   padding: 0;
 }
 
-.hospitals .flex{
-  justify-content: space-between;
-}

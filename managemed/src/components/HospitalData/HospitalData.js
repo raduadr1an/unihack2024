@@ -153,189 +153,168 @@ function HospitalData() {
     switch (currentPage) {
       case "hospitals":
         return (
-          <div>
+          <div className="container">
             <h1>Hospitals</h1>
-            <h2>Add New Hospital</h2>
-            <input
-              type="text"
-              value={hospitalName}
-              onChange={(e) => setHospitalName(e.target.value)}
-              placeholder="Hospital Name"
-            />
-            <button onClick={addHospital}>Add Hospital</button>
-            {hospitals.map((hospital) => (
-              <div key={hospital.id} className="box">
-                <div
-                  onClick={() => navigateToHospital(hospital.id)}
-                  style={{ cursor: "pointer", color: "blue" }}
-                >
-                  <h1>Hospital: {hospital.hospitalName}</h1>
+            <div className="add-section">
+              <h2>Add New Hospital</h2>
+              <input
+                type="text"
+                value={hospitalName}
+                onChange={(e) => setHospitalName(e.target.value)}
+                placeholder="Hospital Name"
+              />
+              <button onClick={addHospital}>Add Hospital</button>
+            </div>
+            <div className="list">
+              {hospitals.map((hospital) => (
+                <div key={hospital.id} className="box hospital">
+                  <h2 onClick={() => navigateToHospital(hospital.id)}>{hospital.hospitalName}</h2>
+                  <button onClick={() => deleteHospital(hospital.id)} className="delete-btn">Delete</button>
                 </div>
-                <button onClick={() => deleteHospital(hospital.id)} style={{ color: "red" }}>
-                  Delete Hospital
-                </button>
-              </div>
-            ))}
-            
+              ))}
+            </div>
           </div>
         );
+        
       case "hospital":
         const hospital = hospitals.find((h) => h.id === hospitalID1);
         return (
-          <div>
-            <h1>Hospital: {hospital.hospitalName}</h1>
+          <div className="container">
+            <h1>{hospital.hospitalName}</h1>
             <button onClick={() => setCurrentPage("hospitals")}>Back to Hospitals</button>
-            <h2>Add New Level</h2>
-            <input
-              type="text"
-              value={levelName}
-              onChange={(e) => setLevelName(e.target.value)}
-              placeholder="Level Name"
-            />
-            <button onClick={addLevel}>Add Level</button>
-            {hospital.floor && (
-              <div>
-                <h2>Levels</h2>
-                {Object.keys(hospital.floor).map((levelKey) => {
-                  const level = hospital.floor[levelKey];
-                  return (
-                    <div key={levelKey} className="box">
-                      <div
-                        onClick={() => navigateToLevel(hospital.id, levelKey)}
-                        style={{ cursor: "pointer", color: "green" }}
-                      >
-                        <h2>Level: {level.floorNumber}</h2>
-                      </div>
-                      <button onClick={() => deleteLevel(hospital.id, levelKey)} style={{ color: "red" }}>
-                        Delete Level
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
+            <div className="add-section">
+              <h2>Add New Level</h2>
+              <input
+                type="text"
+                value={levelName}
+                onChange={(e) => setLevelName(e.target.value)}
+                placeholder="Level Name"
+              />
+              <button onClick={addLevel}>Add Level</button>
+            </div>
+            <div className="list">
+              {hospital.floor && Object.keys(hospital.floor).map((levelKey) => (
+                <div key={levelKey} className="box level">
+                  <h2 onClick={() => navigateToLevel(hospital.id, levelKey)}>{hospital.floor[levelKey].floorNumber}</h2>
+                  <button onClick={() => deleteLevel(hospital.id, levelKey)} className="delete-btn">Delete</button>
+                </div>
+              ))}
+            </div>
           </div>
         );
+      
       case "level":
-        const level = hospitals
-          .find((h) => h.id === hospitalID1)
-          ?.floor[levelID1];
+        const level = hospitals.find((h) => h.id === hospitalID1)?.floor[levelID1];
         return (
-          <div>
-            <h1>Level: {level.floorNumber}</h1>
+          <div className="container">
+            <h1>{level.floorNumber}</h1>
             <button onClick={() => setCurrentPage("hospital")}>Back to Hospital</button>
-            <h2>Add New Room</h2>
-            <input
-              type="text"
-              value={roomNumber}
-              onChange={(e) => setRoomNumber(e.target.value)}
-              placeholder="Room Number"
-            />
-            <button onClick={addRoom}>Add Room</button>
-            {level.roomInfo && (
-              <div>
-                <h2>Rooms</h2>
-                {Object.keys(level.roomInfo).map((roomKey) => {
-                  const room = level.roomInfo[roomKey];
-                  return (
-                    <div key={roomKey} className="box">
-                      <div
-                        onClick={() => navigateToRoom(hospitalID1, levelID1, roomKey)}
-                        style={{ cursor: "pointer", color: "purple" }}
-                      >
-                        <h3>Room: {room.roomNumber}</h3>
+            <div className="add-section">
+              <h2>Add New Room</h2>
+              <input
+                type="text"
+                value={roomNumber}
+                onChange={(e) => setRoomNumber(e.target.value)}
+                placeholder="Room Number"
+              />
+              <button onClick={addRoom}>Add Room</button>
+            </div>
+            <div className="list">
+              {level.roomInfo && Object.keys(level.roomInfo).map((roomKey) => (
+                <div key={roomKey} className="box room">
+                  <h3 onClick={() => navigateToRoom(hospitalID1, levelID1, roomKey)}>{level.roomInfo[roomKey].roomNumber}</h3>
+                  <button onClick={() => deleteRoom(hospitalID1, levelID1, roomKey)} className="delete-btn">Delete</button>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      
+        case "room":
+          const room = hospitals
+            .find((h) => h.id === hospitalID1)
+            ?.floor[levelID1]
+            ?.roomInfo[roomID1];
+          return (
+            <div>
+              <h1>Room: {room.roomNumber}</h1>
+              <button onClick={() => setCurrentPage("level")}>Back to Level</button>
+              <h2 className="title">Add New Patient</h2>
+              <div className="addPatient">
+                    <input
+                      type="text"
+                      value={patientDetails.pacientName}
+                      onChange={(e) =>
+                        setPatientDetails({ ...patientDetails, pacientName: e.target.value })
+                      }
+                      placeholder="Patient Name"
+                    />
+                    <input
+                      type="text"
+                      value={patientDetails.pacientAge}
+                      onChange={(e) =>
+                        setPatientDetails({ ...patientDetails, pacientAge: e.target.value })
+                      }
+                      placeholder="Age"
+                    />
+                <input
+                    type="text" 
+                    value={patientDetails.pacientDiagnosis}
+                    onChange={(e) =>
+                      setPatientDetails({ ...patientDetails, pacientDiagnosis: e.target.value })
+                    }
+                    placeholder="Diagnosis"
+                  />
+               
+                 
+                  <input
+                    type="text" 
+                    value={patientDetails.doctorName}
+                    onChange={(e) =>
+                      setPatientDetails({ ...patientDetails, doctorName: e.target.value })
+                    }
+                    placeholder="Doctor Name"
+                  />
+                <input
+                  type="text" className="felex"
+                  value={patientDetails.pacientStatus}
+                  onChange={(e) =>
+                    setPatientDetails({ ...patientDetails, pacientStatus: e.target.value })
+                  }
+                  placeholder="Status"
+                />
+              </div>
+              
+              <button onClick={addPatient}>Add Patient</button>
+              {room.pacientInfo && (
+                <div className="patients">
+                  <h2 className="title">Patients</h2>
+                  {Object.keys(room.pacientInfo).map((patientKey) => {
+                    const patient = room.pacientInfo[patientKey];
+                    return (
+                      <div key={patientKey} className="box">
+                        <h3>Patient: {patient.pacientName}</h3>
+                        <p>Age: {patient.pacientAge}</p>
+                        <p>Diagnosis: {patient.pacientDiagnosis}</p>
+                        <p>Doctor: {patient.doctorName}</p>
+                        <p>Status: {patient.pacientStatus}</p>
+                        <button
+                          onClick={() => deletePatient(hospitalID1, levelID1, roomID1, patientKey)}
+                          style={{ color: "red" }}
+                        >
+                          Delete Patient
+                        </button>
                       </div>
-                      <button onClick={() => deleteRoom(hospitalID1, levelID1, roomKey)} style={{ color: "red" }}>
-                        Delete Room
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        );
-      case "room":
-        const room = hospitals
-          .find((h) => h.id === hospitalID1)
-          ?.floor[levelID1]
-          ?.roomInfo[roomID1];
-        return (
-          <div>
-            <h1>Room: {room.roomNumber}</h1>
-            <button onClick={() => setCurrentPage("level")}>Back to Level</button>
-            <h2>Add New Patient</h2>
-            <input
-              type="text"
-              value={patientDetails.pacientName}
-              onChange={(e) =>
-                setPatientDetails({ ...patientDetails, pacientName: e.target.value })
-              }
-              placeholder="Patient Name"
-            />
-            <input
-              type="text"
-              value={patientDetails.pacientAge}
-              onChange={(e) =>
-                setPatientDetails({ ...patientDetails, pacientAge: e.target.value })
-              }
-              placeholder="Age"
-            />
-            <input
-              type="text"
-              value={patientDetails.pacientDiagnosis}
-              onChange={(e) =>
-                setPatientDetails({ ...patientDetails, pacientDiagnosis: e.target.value })
-              }
-              placeholder="Diagnosis"
-            />
-            <input
-              type="text"
-              value={patientDetails.doctorName}
-              onChange={(e) =>
-                setPatientDetails({ ...patientDetails, doctorName: e.target.value })
-              }
-              placeholder="Doctor Name"
-            />
-            <input
-              type="text"
-              value={patientDetails.pacientStatus}
-              onChange={(e) =>
-                setPatientDetails({ ...patientDetails, pacientStatus: e.target.value })
-              }
-              placeholder="Status"
-            />
-            <button onClick={addPatient}>Add Patient</button>
-            {room.pacientInfo && (
-              <div>
-                <h2>Patients</h2>
-                {Object.keys(room.pacientInfo).map((patientKey) => {
-                  const patient = room.pacientInfo[patientKey];
-                  return (
-                    <div key={patientKey} className="box">
-                      <h3>Patient: {patient.pacientName}</h3>
-                      <p>Age: {patient.pacientAge}</p>
-                      <p>Diagnosis: {patient.pacientDiagnosis}</p>
-                      <p>Doctor: {patient.doctorName}</p>
-                      <p>Status: {patient.pacientStatus}</p>
-                      <button
-                        onClick={() => deletePatient(hospitalID1, levelID1, roomID1, patientKey)}
-                        style={{ color: "red" }}
-                      >
-                        Delete Patient
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        );
-      default:
-        return null;
-    }
-  };
-
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          );
+        default:
+          return null;
+      }
+    };
   return (
     <div>
       {renderPage()}

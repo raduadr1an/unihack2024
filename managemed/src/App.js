@@ -13,6 +13,7 @@ function App() {
   return (
     <Router> {/* Use BrowserRouter here */}
       <Navbar />
+      <br></br>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />

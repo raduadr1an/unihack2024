@@ -50,6 +50,22 @@ function Navbar() {
           </li>
         ) : (
           <>
+          <li>
+              <Link
+                to="/search"
+                className={location.pathname === '/search' ? 'active' : ''}
+              >
+                Search
+              </Link>
+            </li>
+          <li>
+              <Link
+                to="/hd"
+                className={location.pathname === '/hd' ? 'active' : ''}
+              >
+                Manage
+              </Link>
+            </li>
             <li>
               <Link
                 to="/profile"
