@@ -1,30 +1,33 @@
-import Navbar from './components/Navbar';
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Change here
 import Home from './pages/Home';
-import Auth from './pages/Auth';
-<<<<<<< Updated upstream
-=======
-import logo from './assets/hospital.svg';
-import './App.css';
-import Profile from './pages/Profile.js';   
-import Login from './pages/Auth.js';     
-import Nouser from './pages/Nouser.js';
->>>>>>> Stashed changes
+import Login from './pages/Auth';
+import Profile from './pages/Profile';
+import NoUser from './pages/Nouser';
+import Navbar from './components/Navbar';
+import ForgotPassword from './pages/ForgetPassword'; 
+import Admin from './pages/Admin';
+import ProtectedRoute from './components/ProtectedRoute';
+import HospitalData from './components/HospitalData/HospitalData';
 
 function App() {
   return (
     // Navigation bar
     <Router>
       <Navbar />
+      <br></br>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/auth" element={<Login />} />
-        <Route path="/nouser" element={<Nouser />} /> 
+        <Route path="/nouser" element={<NoUser />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/hd" element={<HospitalData />} />
       </Routes>
     </Router>
 
   );
 }
+
 export default App;

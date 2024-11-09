@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { auth } from '../firebaseConfig';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import HospitalData from '../components/HospitalData/HospitalData';
 
 function Profile() {
   const [userData, setUserData] = useState(null);
@@ -15,17 +16,18 @@ function Profile() {
         uid: user.uid,
       });
     } else {
-      navigate('/login');
+      // navigate('/login');
     }
   }, [navigate]);
 
-  if (!userData) return <p>Loading...</p>;
+  if (!userData) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <div className="profile-container">
       <h1>Welcome, {userData.displayName || userData.email}!</h1>
       <p>Email: {userData.email}</p>
-      <p>User ID: {userData.uid}</p>
    </div>
   );
 }
