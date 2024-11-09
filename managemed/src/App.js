@@ -8,6 +8,7 @@ import Navbar from './components/Navbar';
 import ForgotPassword from './pages/ForgetPassword'; 
 import Admin from './pages/Admin';
 import ProtectedRoute from './components/ProtectedRoute';
+import HospitlaData from './components/HospitalData/HospitalData'; 
 function App() {
   return (
     <Router> {/* Use BrowserRouter here */}
@@ -19,6 +20,7 @@ function App() {
         <Route path="/nouser" element={<NoUser />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route   path="/admin" element={<Admin />} />
+        <Route   path="/hd" element={<HospitlaData />} />
       </Routes>
     </Router>
   );

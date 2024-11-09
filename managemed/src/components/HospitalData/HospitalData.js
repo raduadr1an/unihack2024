@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ref, onValue, set, push, remove } from "firebase/database";
-import database from "../firebaseConfig";
+import {database} from '../../firebaseConfig';
 import "./HospitalData.css";
 
 function HospitalData() {
