@@ -16,6 +16,15 @@ function Navbar() {
     return () => unsubscribe();
   }, []); 
 
+
+
+  useEffect(() => {
+
+    const unsubscribe = auth.onAuthStateChanged(setUser);
+
+    return () => unsubscribe();
+  }, []); 
+
   const handleLogout = async () => {
     try {
       await auth.signOut();
@@ -39,6 +48,7 @@ function Navbar() {
             Home
           </Link>
         </li>
+       
         {!user ? (
           <li>
             <Link

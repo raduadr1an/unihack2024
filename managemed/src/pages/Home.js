@@ -77,7 +77,7 @@ function Home() {
 
   return (
     <>
-    <SearchBar />
+    {/* <SearchBar /> */}
       <div className="flex">
         <div className="options">
           <ul>
