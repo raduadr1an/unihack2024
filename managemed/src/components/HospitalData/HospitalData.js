@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ref, onValue, set, push, remove } from "firebase/database";
 import database from "../firebaseConfig";
-import "./HospitalData.css"; // Assuming CSS is handled for layout
+import "./HospitalData.css";
 
 function HospitalData() {
   const [hospitals, setHospitals] = useState([]);
@@ -15,9 +15,18 @@ function HospitalData() {
     doctorName: "",
     pacientStatus: ""
   });
+
   const [hospitalID1, setHospitalID1] = useState(""); // selected hospital ID
   const [levelID1, setLevelID1] = useState(""); // selected level ID
   const [roomID1, setRoomID1] = useState(""); // selected room ID
+
+  // State to manage current page (Hospital, Level, Room)
+  const [currentPage, setCurrentPage] = useState("hospitals"); // "hospitals", "hospital", "level", "room"
+
+  // States to handle expansion of hospitals, levels, and rooms
+  const [expandedHospitals, setExpandedHospitals] = useState({});
+  const [expandedLevels, setExpandedLevels] = useState({});
+  const [expandedRooms, setExpandedRooms] = useState({});
 
   // Fetching data from Firebase Realtime Database
   useEffect(() => {
@@ -38,7 +47,7 @@ function HospitalData() {
   }, []);
 
   // Function to add a new hospital
-  const addHospital = (hospitalName) => {
+  const addHospital = () => {
     const hospitalsRef = ref(database, "hospital");
     const newHospitalRef = push(hospitalsRef);
     set(newHospitalRef, { hospitalName: hospitalName, floor: {} });
@@ -46,7 +55,7 @@ function HospitalData() {
   };
 
   // Function to add a new level to a hospital
-  const addLevel = (hospitalID1, levelName) => {
+  const addLevel = () => {
     const levelsRef = ref(database, `hospital/${hospitalID1}/floor`);
     const newLevelRef = push(levelsRef);
     set(newLevelRef, { floorNumber: levelName, roomInfo: {} });
@@ -54,7 +63,7 @@ function HospitalData() {
   };
 
   // Function to add a new room to a level
-  const addRoom = (hospitalID1, levelID1, roomNumber) => {
+  const addRoom = () => {
     const roomsRef = ref(database, `hospital/${hospitalID1}/floor/${levelID1}/roomInfo`);
     const newRoomRef = push(roomsRef);
     set(newRoomRef, { roomNumber: roomNumber, isOccupied: false, pacientInfo: {} });
@@ -62,11 +71,17 @@ function HospitalData() {
   };
 
   // Function to add a new patient to a room
-  const addPatient = (hospitalID1, levelID1, roomID1, patientDetails) => {
+  const addPatient = () => {
     const patientsRef = ref(database, `hospital/${hospitalID1}/floor/${levelID1}/roomInfo/${roomID1}/pacientInfo`);
     const newPatientRef = push(patientsRef);
     set(newPatientRef, { ...patientDetails });
-    setPatientDetails({ pacientName: "", pacientAge: "", pacientDiagnosis: "", doctorName: "", pacientStatus: "" });
+    setPatientDetails({
+      pacientName: "",
+      pacientAge: "",
+      pacientDiagnosis: "",
+      doctorName: "",
+      pacientStatus: "",
+    });
   };
 
   // Function to delete a hospital
@@ -93,178 +108,237 @@ function HospitalData() {
     remove(patientRef);
   };
 
-  return (
-    <div className="container">
-      <div className="hospital-data-box">
-        <h1>Hospitals</h1>
-        {hospitals.map((hospital) => (
-          <div key={hospital.id} style={{ marginBottom: "20px", border: "1px solid #ccc", padding: "10px" }}>
-            <h2>Hospital: {hospital.hospitalName}</h2>
-            <button onClick={() => deleteHospital(hospital.id)} style={{ color: "red" }}>
-              Delete Hospital
-            </button>
+  // Function to toggle the expansion of a hospital
+  const toggleHospitalExpansion = (hospitalID) => {
+    setExpandedHospitals((prevExpandedHospitals) => ({
+      ...prevExpandedHospitals,
+      [hospitalID]: !prevExpandedHospitals[hospitalID],
+    }));
+  };
+
+  // Function to toggle the expansion of a level
+  const toggleLevelExpansion = (hospitalID, levelID) => {
+    setExpandedLevels((prevExpandedLevels) => ({
+      ...prevExpandedLevels,
+      [`${hospitalID}_${levelID}`]: !prevExpandedLevels[`${hospitalID}_${levelID}`],
+    }));
+  };
+
+  // Function to toggle the expansion of a room
+  const toggleRoomExpansion = (hospitalID, levelID, roomID) => {
+    setExpandedRooms((prevExpandedRooms) => ({
+      ...prevExpandedRooms,
+      [`${hospitalID}_${levelID}_${roomID}`]: !prevExpandedRooms[`${hospitalID}_${levelID}_${roomID}`],
+    }));
+  };
+
+  // Function to handle navigation
+  const navigateToHospital = (hospitalID) => {
+    setHospitalID1(hospitalID);
+    setCurrentPage("hospital");
+  };
+
+  const navigateToLevel = (hospitalID, levelID) => {
+    setLevelID1(levelID);
+    setCurrentPage("level");
+  };
+
+  const navigateToRoom = (hospitalID, levelID, roomID) => {
+    setRoomID1(roomID);
+    setCurrentPage("room");
+  };
+
+  // Render the current page
+  const renderPage = () => {
+    switch (currentPage) {
+      case "hospitals":
+        return (
+          <div>
+            <h1>Hospitals</h1>
+            <h2>Add New Hospital</h2>
+            <input
+              type="text"
+              value={hospitalName}
+              onChange={(e) => setHospitalName(e.target.value)}
+              placeholder="Hospital Name"
+            />
+            <button onClick={addHospital}>Add Hospital</button>
+            {hospitals.map((hospital) => (
+              <div key={hospital.id} className="box">
+                <div
+                  onClick={() => navigateToHospital(hospital.id)}
+                  style={{ cursor: "pointer", color: "blue" }}
+                >
+                  <h1>Hospital: {hospital.hospitalName}</h1>
+                </div>
+                <button onClick={() => deleteHospital(hospital.id)} style={{ color: "red" }}>
+                  Delete Hospital
+                </button>
+              </div>
+            ))}
+            
+          </div>
+        );
+      case "hospital":
+        const hospital = hospitals.find((h) => h.id === hospitalID1);
+        return (
+          <div>
+            <h1>Hospital: {hospital.hospitalName}</h1>
+            <button onClick={() => setCurrentPage("hospitals")}>Back to Hospitals</button>
+            <h2>Add New Level</h2>
+            <input
+              type="text"
+              value={levelName}
+              onChange={(e) => setLevelName(e.target.value)}
+              placeholder="Level Name"
+            />
+            <button onClick={addLevel}>Add Level</button>
             {hospital.floor && (
-              <div style={{ marginLeft: "20px" }}>
-                <h3>Levels</h3>
+              <div>
+                <h2>Levels</h2>
                 {Object.keys(hospital.floor).map((levelKey) => {
                   const level = hospital.floor[levelKey];
                   return (
-                    <div key={levelKey} style={{ marginBottom: "10px" }}>
-                      <h4>Level: {level.floorNumber}</h4>
+                    <div key={levelKey} className="box">
+                      <div
+                        onClick={() => navigateToLevel(hospital.id, levelKey)}
+                        style={{ cursor: "pointer", color: "green" }}
+                      >
+                        <h2>Level: {level.floorNumber}</h2>
+                      </div>
                       <button onClick={() => deleteLevel(hospital.id, levelKey)} style={{ color: "red" }}>
                         Delete Level
                       </button>
-                      {level.roomInfo && (
-                        <div style={{ marginLeft: "20px" }}>
-                          <h5>Rooms</h5>
-                          {Object.keys(level.roomInfo).map((roomKey) => {
-                            const room = level.roomInfo[roomKey];
-                            return (
-                              <div key={roomKey} style={{ marginBottom: "10px" }}>
-                                <h6>Room {room.roomNumber}</h6>
-                                <button onClick={() => deleteRoom(hospital.id, levelKey, roomKey)} style={{ color: "red" }}>
-                                  Delete Room
-                                </button>
-                                {room.pacientInfo && (
-                                  <div style={{ marginLeft: "20px" }}>
-                                    <h6>Patients</h6>
-                                    {Object.keys(room.pacientInfo).map((patientKey) => {
-                                      const patient = room.pacientInfo[patientKey];
-                                      return (
-                                        <div key={patientKey} style={{ marginBottom: "5px", paddingLeft: "10px", borderLeft: "2px solid #ddd" }}>
-                                          <p><strong>Name:</strong> {patient.pacientName}</p>
-                                          <p><strong>Age:</strong> {patient.pacientAge}</p>
-                                          <p><strong>Diagnosis:</strong> {patient.pacientDiagnosis}</p>
-                                          <p><strong>Doctor:</strong> {patient.doctorName}</p>
-                                          <p><strong>Status:</strong> {patient.pacientStatus}</p>
-                                          <button onClick={() => deletePatient(hospital.id, levelKey, roomKey, patientKey)} style={{ color: "red" }}>
-                                            Delete Patient
-                                          </button>
-                                        </div>
-                                      );
-                                    })}
-                                  </div>
-                                )}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
                     </div>
                   );
                 })}
               </div>
             )}
           </div>
-        ))}
-      </div>
+        );
+      case "level":
+        const level = hospitals
+          .find((h) => h.id === hospitalID1)
+          ?.floor[levelID1];
+        return (
+          <div>
+            <h1>Level: {level.floorNumber}</h1>
+            <button onClick={() => setCurrentPage("hospital")}>Back to Hospital</button>
+            <h2>Add New Room</h2>
+            <input
+              type="text"
+              value={roomNumber}
+              onChange={(e) => setRoomNumber(e.target.value)}
+              placeholder="Room Number"
+            />
+            <button onClick={addRoom}>Add Room</button>
+            {level.roomInfo && (
+              <div>
+                <h2>Rooms</h2>
+                {Object.keys(level.roomInfo).map((roomKey) => {
+                  const room = level.roomInfo[roomKey];
+                  return (
+                    <div key={roomKey} className="box">
+                      <div
+                        onClick={() => navigateToRoom(hospitalID1, levelID1, roomKey)}
+                        style={{ cursor: "pointer", color: "purple" }}
+                      >
+                        <h3>Room: {room.roomNumber}</h3>
+                      </div>
+                      <button onClick={() => deleteRoom(hospitalID1, levelID1, roomKey)} style={{ color: "red" }}>
+                        Delete Room
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        );
+      case "room":
+        const room = hospitals
+          .find((h) => h.id === hospitalID1)
+          ?.floor[levelID1]
+          ?.roomInfo[roomID1];
+        return (
+          <div>
+            <h1>Room: {room.roomNumber}</h1>
+            <button onClick={() => setCurrentPage("level")}>Back to Level</button>
+            <h2>Add New Patient</h2>
+            <input
+              type="text"
+              value={patientDetails.pacientName}
+              onChange={(e) =>
+                setPatientDetails({ ...patientDetails, pacientName: e.target.value })
+              }
+              placeholder="Patient Name"
+            />
+            <input
+              type="text"
+              value={patientDetails.pacientAge}
+              onChange={(e) =>
+                setPatientDetails({ ...patientDetails, pacientAge: e.target.value })
+              }
+              placeholder="Age"
+            />
+            <input
+              type="text"
+              value={patientDetails.pacientDiagnosis}
+              onChange={(e) =>
+                setPatientDetails({ ...patientDetails, pacientDiagnosis: e.target.value })
+              }
+              placeholder="Diagnosis"
+            />
+            <input
+              type="text"
+              value={patientDetails.doctorName}
+              onChange={(e) =>
+                setPatientDetails({ ...patientDetails, doctorName: e.target.value })
+              }
+              placeholder="Doctor Name"
+            />
+            <input
+              type="text"
+              value={patientDetails.pacientStatus}
+              onChange={(e) =>
+                setPatientDetails({ ...patientDetails, pacientStatus: e.target.value })
+              }
+              placeholder="Status"
+            />
+            <button onClick={addPatient}>Add Patient</button>
+            {room.pacientInfo && (
+              <div>
+                <h2>Patients</h2>
+                {Object.keys(room.pacientInfo).map((patientKey) => {
+                  const patient = room.pacientInfo[patientKey];
+                  return (
+                    <div key={patientKey} className="box">
+                      <h3>Patient: {patient.pacientName}</h3>
+                      <p>Age: {patient.pacientAge}</p>
+                      <p>Diagnosis: {patient.pacientDiagnosis}</p>
+                      <p>Doctor: {patient.doctorName}</p>
+                      <p>Status: {patient.pacientStatus}</p>
+                      <button
+                        onClick={() => deletePatient(hospitalID1, levelID1, roomID1, patientKey)}
+                        style={{ color: "red" }}
+                      >
+                        Delete Patient
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
 
-      <div className="add-elements-box">
-        {/* Form to add a new hospital */}
-        <div>
-          <h3>Add New Hospital</h3>
-          <input
-            type="text"
-            placeholder="Hospital Name"
-            value={hospitalName}
-            onChange={(e) => setHospitalName(e.target.value)}
-          />
-          <button onClick={() => addHospital(hospitalName)}>Add Hospital</button>
-        </div>
-
-        {/* Form to add a new level */}
-        <div>
-          <h3>Add New Level</h3>
-          <select onChange={(e) => setHospitalID1(e.target.value)}>
-            <option value="">Select Hospital</option>
-            {hospitals.map((hospital) => (
-              <option key={hospital.id} value={hospital.id}>
-                {hospital.hospitalName}
-              </option>
-            ))}
-          </select>
-          <input
-            type="text"
-            placeholder="Level Name"
-            value={levelName}
-            onChange={(e) => setLevelName(e.target.value)}
-          />
-          <button onClick={() => addLevel(hospitalID1, levelName)}>Add Level</button>
-        </div>
-
-        {/* Form to add a new room */}
-        <div>
-          <h3>Add New Room</h3>
-          <select onChange={(e) => setLevelID1(e.target.value)}>
-            <option value="">Select Level</option>
-            {hospitalID1 &&
-              hospitals
-                .find((h) => h.id === hospitalID1)
-                ?.floor && 
-              Object.keys(hospitals.find((h) => h.id === hospitalID1).floor).map((levelKey) => (
-                <option key={levelKey} value={levelKey}>
-                  {hospitals.find((h) => h.id === hospitalID1).floor[levelKey].floorNumber}
-                </option>
-              ))}
-          </select>
-          <input
-            type="text"
-            placeholder="Room Number"
-            value={roomNumber}
-            onChange={(e) => setRoomNumber(e.target.value)}
-          />
-          <button onClick={() => addRoom(hospitalID1, levelID1, roomNumber)}>Add Room</button>
-        </div>
-
-        {/* Form to add a new patient */}
-        <div>
-          <h3>Add New Patient</h3>
-          <select onChange={(e) => setRoomID1(e.target.value)}>
-            <option value="">Select Room</option>
-            {hospitalID1 && levelID1 && hospitals
-              .find((h) => h.id === hospitalID1)
-              ?.floor[levelID1]?.roomInfo &&
-              Object.keys(hospitals.find((h) => h.id === hospitalID1).floor[levelID1].roomInfo).map((roomKey) => (
-                <option key={roomKey} value={roomKey}>
-                  {hospitals.find((h) => h.id === hospitalID1).floor[levelID1].roomInfo[roomKey].roomNumber}
-                </option>
-              ))}
-          </select>
-          <input
-            type="text"
-            placeholder="Patient Name"
-            value={patientDetails.pacientName}
-            onChange={(e) => setPatientDetails({ ...patientDetails, pacientName: e.target.value })}
-          />
-          <input
-            type="text"
-            placeholder="Patient Age"
-            value={patientDetails.pacientAge}
-            onChange={(e) => setPatientDetails({ ...patientDetails, pacientAge: e.target.value })}
-          />
-          <input
-            type="text"
-            placeholder="Diagnosis"
-            value={patientDetails.pacientDiagnosis}
-            onChange={(e) => setPatientDetails({ ...patientDetails, pacientDiagnosis: e.target.value })}
-          />
-          <input
-            type="text"
-            placeholder="Doctor Name"
-            value={patientDetails.doctorName}
-            onChange={(e) => setPatientDetails({ ...patientDetails, doctorName: e.target.value })}
-          />
-          <input
-            type="text"
-            placeholder="Patient Status"
-            value={patientDetails.pacientStatus}
-            onChange={(e) => setPatientDetails({ ...patientDetails, pacientStatus: e.target.value })}
-          />
-          <button onClick={() => addPatient(hospitalID1, levelID1, roomID1, patientDetails)}>
-            Add Patient
-          </button>
-        </div>
-      </div>
+  return (
+    <div>
+      {renderPage()}
     </div>
   );
 }
