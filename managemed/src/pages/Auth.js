@@ -20,7 +20,7 @@ function Auth() {
     if (auth.currentUser) {
       navigate('/management'); // Redirect to management page if user is logged in
     }
-  }, []);
+  }, [navigate]);
 
   // Function to show a notification message
   const showMessage = (message) => {
