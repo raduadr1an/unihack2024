@@ -11,11 +11,12 @@ function Auth() {
   const navigate = useNavigate();
 
   // Regular expression to check if the email is valid
+  
   const checkEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
-
+  
   // Handling email input change and checking if it's valid
   const handleEmailChange = (e) => {
     const email = e.target.value;
@@ -25,7 +26,6 @@ function Auth() {
 
   const handleLogin = async (event) => {
     event.preventDefault();
-
     // If the credentials match the admin credentials, redirect to the admin panel
     if (username === 'admin@managemd.unihack' && password === 'RCSD1234') {
       navigate('/admin');  // Admin credentials hardcoded to navigate to admin panel
@@ -78,8 +78,8 @@ function Auth() {
             />
           </div>
 
-          {/* Login Button */}
           <button type="submit" className="login-button">LogIn</button>
+
         </form>
       </div>
     </div>

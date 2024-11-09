@@ -8,10 +8,12 @@ import Navbar from './components/Navbar';
 import ForgotPassword from './pages/ForgetPassword'; 
 import Admin from './pages/Admin';
 import ProtectedRoute from './components/ProtectedRoute';
-import HospitalData from './components/HospitalData/HospitalData'; 
+import HospitalData from './components/HospitalData/HospitalData';
+
 function App() {
   return (
-    <Router> {/* Use BrowserRouter here */}
+    // Navigation bar
+    <Router>
       <Navbar />
       <br></br>
       <Routes>
@@ -24,6 +26,7 @@ function App() {
         <Route path="/hd" element={<HospitalData />} />
       </Routes>
     </Router>
+
   );
 }
 

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { auth } from '../firebaseConfig';
 import { Link, useNavigate } from 'react-router-dom';
 import HospitalData from '../components/HospitalData/HospitalData';
+
 function Profile() {
   const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
@@ -22,13 +23,11 @@ function Profile() {
   if (!userData) {
     return <p>Loading...</p>;
   }
-     
 
   return (
     <div className="profile-container">
       <h1>Welcome, {userData.displayName || userData.email}!</h1>
       <p>Email: {userData.email}</p>
-      
    </div>
   );
 }
