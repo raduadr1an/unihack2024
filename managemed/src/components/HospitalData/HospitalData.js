@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import React, { useEffect, useState } from "react";
 import { ref, onValue, set, push, remove, update } from "firebase/database";
 import {database} from "../../firebaseConfig";
@@ -371,3 +372,5 @@ function HospitalData() {
 }
 
 export default HospitalData;
+=======
+>>>>>>> Stashed changes
