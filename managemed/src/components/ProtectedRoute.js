@@ -1,3 +1,6 @@
+
+//delete if no use
+
 import React from "react";
 import { Route, Navigate } from "react-router-dom";
 import { auth } from "../firebaseConfig"; // Ensure you import Firebase auth

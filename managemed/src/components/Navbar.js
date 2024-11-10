@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom'; 
-import './navbar.css';
+import './Navbar.css';
 import { auth } from '../firebaseConfig';
 import logo from '../assets/hospital.svg';
 
@@ -8,15 +8,6 @@ function Navbar() {
   const location = useLocation();
   const navigate = useNavigate(); 
   const [user, setUser] = useState(null);
-
-  useEffect(() => {
-
-    const unsubscribe = auth.onAuthStateChanged(setUser);
-
-    return () => unsubscribe();
-  }, []); 
-
-
 
   useEffect(() => {
 

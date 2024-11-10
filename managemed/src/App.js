@@ -1,18 +1,16 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Change here
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/Auth';
 import Profile from './pages/Profile';
-import NoUser from './pages/Nouser';
+import NoUser from './pages/NoUser';
 import Navbar from './components/Navbar';
 import ForgotPassword from './pages/ForgetPassword'; 
 import Admin from './pages/Admin';
-import ProtectedRoute from './components/ProtectedRoute';
 import HospitalData from './components/HospitalData/HospitalData';
 import Search from './components/SearchPatient';
 function App() {
   return (
-    // Navigation bar
     <Router>
       <Navbar />
       <br></br>
@@ -27,7 +25,6 @@ function App() {
         <Route path="/search" element={<Search />} />
       </Routes>
     </Router>
-
   );
 }
 

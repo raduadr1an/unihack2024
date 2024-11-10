@@ -10,42 +10,36 @@ function Auth() {
   const [emailError, setEmailError] = useState(false);
   const navigate = useNavigate();
 
-  // Regular expression to check if the email is valid
-  
   const checkEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
   
-  // Handling email input change and checking if it's valid
   const handleEmailChange = (e) => {
     const email = e.target.value;
     setUsername(email);
-    setEmailError(!checkEmail(email)); // Set error if email is invalid
+    setEmailError(!checkEmail(email));
   };
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    // If the credentials match the admin credentials, redirect to the admin panel
     if (username === 'admin@managemd.unihack' && password === 'RCSD1234') {
-      navigate('/admin');  // Admin credentials hardcoded to navigate to admin panel
-      return;  // Stop further execution since admin is redirected
+      navigate('/admin');
+      return;
     }
 
-    // Validate if the entered username is a valid email
     if (!checkEmail(username)) {
-      setEmailError(true);  // If email is not valid, show error message
-      return;  // Stop execution if the email is invalid
+      setEmailError(true);
+      return;
     }
 
-    // Firebase authentication for regular users
     try {
       const userCredential = await signInWithEmailAndPassword(auth, username, password);
       console.log("User logged in:", userCredential.user);
-      navigate('/profile');  // Redirect to profile page for regular users
+      navigate('/profile');
     } catch (error) {
       console.error("Error logging in:", error.message);
-      navigate('/nouser');  // Redirect to /nouser if login fails
+      navigate('/nouser');
     }
   };
 

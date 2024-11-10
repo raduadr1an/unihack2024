@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { ref, onValue, set, push, remove } from "firebase/database";
-import {database} from '../../firebaseConfig';
+import { ref, onValue, set, push, remove, update } from "firebase/database";
+import { database } from "../../firebaseConfig";
 import "./HospitalData.css";
 import TaskManager from "./TaskManager";
 
+
 function HospitalData() {
   const [hospitals, setHospitals] = useState([]);
-  const [hospitalName, setHospitalName] = useState(""); // For new hospital
-  const [levelName, setLevelName] = useState("");
+  const [hospitalName, setHospitalName] = useState("");
   const [roomNumber, setRoomNumber] = useState("");
   const [patientDetails, setPatientDetails] = useState({
     pacientName: "",
     pacientAge: "",
     pacientDiagnosis: "",
     doctorName: "",
-    pacientStatus: ""
+    pacientStatus: "",
   });
   const [patientID1, setPatientID1] = useState("");
   const [editingStatus, setEditingStatus] = useState({});
@@ -29,19 +29,21 @@ function HospitalData() {
   };
 
 
-  const [hospitalID1, setHospitalID1] = useState(""); // selected hospital ID
-  const [levelID1, setLevelID1] = useState(""); // selected level ID
-  const [roomID1, setRoomID1] = useState(""); // selected room ID
+  const [hospitalID1, setHospitalID1] = useState("");
+  const [levelID1, setLevelID1] = useState("");
+  const [roomID1, setRoomID1] = useState("");
+  const [patientID1, setPatientID1] = useState("");
 
-  // State to manage current page (Hospital, Level, Room)
-  const [currentPage, setCurrentPage] = useState("hospitals"); // "hospitals", "hospital", "level", "room"
+  const [currentPage, setCurrentPage] = useState("hospitals");
 
-  // States to handle expansion of hospitals, levels, and rooms
   const [expandedHospitals, setExpandedHospitals] = useState({});
   const [expandedLevels, setExpandedLevels] = useState({});
   const [expandedRooms, setExpandedRooms] = useState({});
 
-  // Fetching data from Firebase Realtime Database
+  const [editingStatus, setEditingStatus] = useState({});
+  const [newStatus, setNewStatus] = useState("");
+  const [tasks, setTasks] = useState([]); // Holds tasks for the selected hospital
+  const [newTask, setNewTask] = useState(""); // Holds input for the new task
   useEffect(() => {
     const hospitalsRef = ref(database, "hospital");
 
@@ -59,7 +61,6 @@ function HospitalData() {
     return () => unsubscribe();
   }, []);
 
-  // Function to add a new hospital
   const addHospital = () => {
     const hospitalsRef = ref(database, "hospital");
     const newHospitalRef = push(hospitalsRef);
@@ -67,25 +68,28 @@ function HospitalData() {
     setHospitalName("");
   };
 
-  // Function to add a new level to a hospital
   const addLevel = () => {
     const levelsRef = ref(database, `hospital/${hospitalID1}/floor`);
+    const levelIndex = Object.keys(hospitals.find(h => h.id === hospitalID1)?.floor || {}).length + 1;
     const newLevelRef = push(levelsRef);
-    set(newLevelRef, { floorNumber: levelName, roomInfo: {} });
-    setLevelName("");
+    set(newLevelRef, { floorNumber: `Level ${levelIndex}`, roomInfo: {} });
   };
 
-  // Function to add a new room to a level
   const addRoom = () => {
     const roomsRef = ref(database, `hospital/${hospitalID1}/floor/${levelID1}/roomInfo`);
+    const roomIndex = Object.keys(
+      hospitals.find((h) => h.id === hospitalID1)?.floor[levelID1]?.roomInfo || {}
+    ).length + 1;
     const newRoomRef = push(roomsRef);
-    set(newRoomRef, { roomNumber: roomNumber, isOccupied: false, pacientInfo: {} });
+    set(newRoomRef, { roomNumber: `Room ${roomIndex}`, isOccupied: false, pacientInfo: {} });
     setRoomNumber("");
   };
 
-  // Function to add a new patient to a room
   const addPatient = () => {
-    const patientsRef = ref(database, `hospital/${hospitalID1}/floor/${levelID1}/roomInfo/${roomID1}/pacientInfo`);
+    const patientsRef = ref(
+      database,
+      `hospital/${hospitalID1}/floor/${levelID1}/roomInfo/${roomID1}/pacientInfo`
+    );
     const newPatientRef = push(patientsRef);
     set(newPatientRef, { ...patientDetails });
     setPatientDetails({
@@ -97,13 +101,27 @@ function HospitalData() {
     });
   };
 
-  // Function to delete a hospital
+  const updatePatientStatus = async (patientKey, newStatus) => {
+    try {
+      const patientRef = ref(
+        database,
+        `hospital/${hospitalID1}/floor/${levelID1}/roomInfo/${roomID1}/pacientInfo/${patientKey}`
+      );
+
+      await update(patientRef, { pacientStatus: newStatus });
+
+      setEditingStatus((prevStatus) => ({ ...prevStatus, [patientKey]: false }));
+    } catch (error) {
+      console.error("Error updating patient status:", error);
+      alert("An error occurred while updating the patient status.");
+    }
+  };
+
   const deleteHospital = (hospitalID) => {
     const hospitalRef = ref(database, `hospital/${hospitalID}`);
     remove(hospitalRef);
   };
 
-  // Function to delete a level from a hospital
   const deleteLevel = (hospitalID, levelID) => {
     const levelRef = ref(database, `hospital/${hospitalID}/floor/${levelID}`);
     remove(levelRef);
@@ -112,19 +130,20 @@ function HospitalData() {
     setPatientID1(patientID);
     setCurrentPage("patient");
   };
-  // Function to delete a room from a level
+
   const deleteRoom = (hospitalID, levelID, roomID) => {
     const roomRef = ref(database, `hospital/${hospitalID}/floor/${levelID}/roomInfo/${roomID}`);
     remove(roomRef);
   };
 
-  // Function to delete a patient from a room
   const deletePatient = (hospitalID1, levelID1, roomID1, patientKey) => {
-    const patientRef = ref(database, `hospital/${hospitalID1}/floor/${levelID1}/roomInfo/${roomID1}/pacientInfo/${patientKey}`);
+    const patientRef = ref(
+      database,
+      `hospital/${hospitalID1}/floor/${levelID1}/roomInfo/${roomID1}/pacientInfo/${patientKey}`
+    );
     remove(patientRef);
   };
 
-  // Function to toggle the expansion of a hospital
   const toggleHospitalExpansion = (hospitalID) => {
     setExpandedHospitals((prevExpandedHospitals) => ({
       ...prevExpandedHospitals,
@@ -132,7 +151,6 @@ function HospitalData() {
     }));
   };
 
-  // Function to toggle the expansion of a level
   const toggleLevelExpansion = (hospitalID, levelID) => {
     setExpandedLevels((prevExpandedLevels) => ({
       ...prevExpandedLevels,
@@ -140,7 +158,6 @@ function HospitalData() {
     }));
   };
 
-  // Function to toggle the expansion of a room
   const toggleRoomExpansion = (hospitalID, levelID, roomID) => {
     setExpandedRooms((prevExpandedRooms) => ({
       ...prevExpandedRooms,
@@ -148,7 +165,6 @@ function HospitalData() {
     }));
   };
 
-  // Function to handle navigation
   const navigateToHospital = (hospitalID) => {
     setHospitalID1(hospitalID);
     setCurrentPage("hospital");
@@ -164,7 +180,11 @@ function HospitalData() {
     setCurrentPage("room");
   };
 
-  // Render the current page
+  const navigateToPatient = (hospitalID, levelID, roomID, patientID) => {
+    setPatientID1(patientID);
+    setCurrentPage("patient");
+  };
+
   const renderPage = () => {
     switch (currentPage) {
       case "hospitals":
@@ -190,7 +210,6 @@ function HospitalData() {
             
         </div>
         );
-        
       case "hospital":
         const hospital = hospitals.find((h) => h.id === hospitalID1);
         return (
@@ -209,7 +228,6 @@ function HospitalData() {
                     onClick={() => navigateToLevel(hospital.id, levelKey)}
                     >
                       <div
-                        
                         style={{ cursor: "pointer", color: "green" }}
                       >
                         <h2>Level {index + 1}</h2>
@@ -224,7 +242,6 @@ function HospitalData() {
             )}
           </div>
         );
-      
       case "level":
         const level = hospitals.find((h) => h.id === hospitalID1)?.floor[levelID1];
         return (
@@ -306,7 +323,6 @@ function HospitalData() {
             <button onClick={addPatient}
             className="button-blue"
             >Add Patient</button>
-
             {room.pacientInfo && (
               <div className="patients">
                 <h2 className="title">Patients</h2>
@@ -371,7 +387,7 @@ function HospitalData() {
                       hospitalID={hospitalID1}
                       levelID={levelID1}
                       roomID={roomID1}
-                      patientID={patientID1} // Pass patient ID to TaskManager
+                      patientID={patientID1}
                     />
                 </div>
           </div>
@@ -380,7 +396,6 @@ function HospitalData() {
         return null;
     }
   };
-
   return <div className="boxboxCartaj">{renderPage()}</div>;
 }
 
