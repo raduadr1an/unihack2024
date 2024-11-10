@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { ref, onValue, push, update, remove, set } from 'firebase/database'; // Added 'set' import
-import { database } from "../../firebaseConfig"; // Make sure to adjust the import based on your project
-
+import { ref, onValue, push, update, remove, set } from 'firebase/database';
+import { database } from "../../firebaseConfig";
+import './HospitalData.css';
 function TaskManager({ hospitalID, levelID, roomID, patientID }) {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState("");
 
-  // Fetching patient tasks from Firebase
   useEffect(() => {
     const tasksRef = ref(database, `hospital/${hospitalID}/floor/${levelID}/roomInfo/${roomID}/pacientInfo/${patientID}/tasks`);
     
@@ -61,20 +60,28 @@ function TaskManager({ hospitalID, levelID, roomID, patientID }) {
         onChange={(e) => setNewTask(e.target.value)}
         placeholder="New Task"
       />
-      <button onClick={handleAddTask}>Add Task</button>
+      <button onClick={handleAddTask}
+        className='button-blue'
+      >Add Task</button>
 
       {tasks.length > 0 && (
-        <div>
-          <ul>
+        <div >
+          <ul
+            className='list-of-tasks'
+          >
             {tasks.map((task) => (
-              <li key={task.id}>
+              <li key={task.id}
+              
+              >
                 <input
                   type="checkbox"
                   checked={task.completed}
-                  onChange={() => handleToggleTask(task.id, task.completed)}
+                  onClick={() => handleToggleTask(task.id, task.completed)}
                 />
                 <span>{task.taskName} ({task.completed ? 'Completed' : 'Pending'})</span>
-                <button onClick={() => handleDeleteTask(task.id)} style={{ color: "red" }}>
+                <button onClick={() => handleDeleteTask(task.id)} 
+                  className='button-of-delete'
+                >
                   Delete
                 </button>
               </li>

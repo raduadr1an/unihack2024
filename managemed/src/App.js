@@ -8,7 +8,7 @@ import Navbar from './components/Navbar';
 import ForgotPassword from './pages/ForgetPassword'; 
 import Admin from './pages/Admin';
 import HospitalData from './components/HospitalData/HospitalData';
-
+import Search from './components/SearchPatient';
 function App() {
   return (
     <Router>
@@ -22,6 +22,7 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/hd" element={<HospitalData />} />
+        <Route path="/search" element={<Search />} />
       </Routes>
     </Router>
   );

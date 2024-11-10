@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { ref, onValue, set, push, remove, update } from "firebase/database";
 import { database } from "../../firebaseConfig";
 import "./HospitalData.css";
-import TaskManager from './TaskManager';
+import TaskManager from "./TaskManager";
+
 
 function HospitalData() {
   const [hospitals, setHospitals] = useState([]);
@@ -15,6 +16,18 @@ function HospitalData() {
     doctorName: "",
     pacientStatus: "",
   });
+  const [patientID1, setPatientID1] = useState("");
+  const [editingStatus, setEditingStatus] = useState({});
+  const [newStatus, setNewStatus] = useState("");
+  const updatePatientStatus = (patientID, status) => {
+    const patientStatusRef = ref(
+      database,
+      `hospital/${hospitalID1}/floor/${levelID1}/roomInfo/${roomID1}/pacientInfo/${patientID}/pacientStatus`
+    );
+    set(patientStatusRef, status);
+    setEditingStatus((prevStatus) => ({ ...prevStatus, [patientID]: false }));
+  };
+
 
   const [hospitalID1, setHospitalID1] = useState("");
   const [levelID1, setLevelID1] = useState("");
@@ -113,6 +126,10 @@ function HospitalData() {
     const levelRef = ref(database, `hospital/${hospitalID}/floor/${levelID}`);
     remove(levelRef);
   };
+  const navigateToPatient = (hospitalID, levelID, roomID, patientID) => {
+    setPatientID1(patientID);
+    setCurrentPage("patient");
+  };
 
   const deleteRoom = (hospitalID, levelID, roomID) => {
     const roomRef = ref(database, `hospital/${hospitalID}/floor/${levelID}/roomInfo/${roomID}`);
@@ -172,7 +189,7 @@ function HospitalData() {
     switch (currentPage) {
       case "hospitals":
         return (
-          <div>
+          <div className="to-the-edge">
             <h1>Hospitals</h1>
             <input
               type="text"
@@ -180,42 +197,42 @@ function HospitalData() {
               onChange={(e) => setHospitalName(e.target.value)}
               placeholder="Hospital Name"
             />
-            <button onClick={addHospital}>Add Hospital</button>
+            <button onClick={addHospital} className="button-blue">Add Hospital</button>
             {hospitals.map((hospital) => (
-              <div key={hospital.id} className="box">
+              <div key={hospital.id} className="box spital"  onClick={() => navigateToHospital(hospital.id)}>
                 <div
-                  onClick={() => navigateToHospital(hospital.id)}
                   style={{ cursor: "pointer", color: "blue" }}
                 >
                   <h1>Hospital: {hospital.hospitalName}</h1>
                 </div>
-                <button onClick={() => deleteHospital(hospital.id)} style={{ color: "red" }}>
-                  Delete Hospital
-                </button>
-              </div>
-            ))}
-          </div>
+                </div>
+              ))}
+            
+        </div>
         );
       case "hospital":
         const hospital = hospitals.find((h) => h.id === hospitalID1);
         return (
-          <div>
+          <div className="to-the-edge">
             <h1>Hospital: {hospital.hospitalName}</h1>
-            <button onClick={() => setCurrentPage("hospitals")}>Back to Hospitals</button>
-            <button onClick={addLevel}>Add Level</button>
+            <div className="nicely-done">
+              <button onClick={() => setCurrentPage("hospitals")} className="button-blue">Back to Hospitals</button>
+              <button onClick={addLevel} className="button-blue">Add Level</button>
+            </div>
             {hospital.floor && (
               <div>
                 {Object.keys(hospital.floor).map((levelKey, index) => {
                   const level = hospital.floor[levelKey];
                   return (
-                    <div key={levelKey} className="box">
+                    <div key={levelKey} className="box" 
+                    onClick={() => navigateToLevel(hospital.id, levelKey)}
+                    >
                       <div
-                        onClick={() => navigateToLevel(hospital.id, levelKey)}
                         style={{ cursor: "pointer", color: "green" }}
                       >
                         <h2>Level {index + 1}</h2>
                       </div>
-                      <button onClick={() => deleteLevel(hospital.id, levelKey)} style={{ color: "red" }}>
+                      <button onClick={() => deleteLevel(hospital.id, levelKey)} className="button-of-delete">
                         Delete Level
                       </button>
                     </div>
@@ -228,23 +245,27 @@ function HospitalData() {
       case "level":
         const level = hospitals.find((h) => h.id === hospitalID1)?.floor[levelID1];
         return (
-          <div>
+          <div className="to-the-edge">
             <h1>Level: {level.floorNumber}</h1>
-            <button onClick={() => setCurrentPage("hospital")}>Back to Hospital</button>
-            <button onClick={addRoom}>Add Room</button>
+            <div className="nicely-done">
+              <button onClick={() => setCurrentPage("hospital")} className="button-blue">Back to Hospital</button>
+              <button onClick={addRoom} className="button-blue">Add Room</button>
+            </div>
             {level.roomInfo && (
               <div>
                 {Object.keys(level.roomInfo).map((roomKey, index) => {
                   const room = level.roomInfo[roomKey];
                   return (
-                    <div key={roomKey} className="box">
+                    <div key={roomKey} className="box"
+                      onClick={() => navigateToRoom(hospitalID1, levelID1, roomKey)}
+                    >
                       <div
-                        onClick={() => navigateToRoom(hospitalID1, levelID1, roomKey)}
                         style={{ cursor: "pointer", color: "blue" }}
                       >
                         <h2>Room {index + 1}</h2>
                       </div>
-                      <button onClick={() => deleteRoom(hospitalID1, levelID1, roomKey)} style={{ color: "red" }}>
+                      <button onClick={() => deleteRoom(hospitalID1, levelID1, roomKey)} className="button-blue"
+                      >
                         Delete Room
                       </button>
                     </div>
@@ -262,7 +283,10 @@ function HospitalData() {
         return (
           <div>
             <h1>Room: {room.roomNumber}</h1>
-            <button onClick={() => setCurrentPage("level")}>Back to Level</button>
+            <button onClick={() => setCurrentPage("level")}
+              className="button-blue"
+
+              >Back to Level</button>
             <h2 className="title">Add New Patient</h2>
             <div className="addPatient">
             <input
@@ -296,17 +320,19 @@ function HospitalData() {
               placeholder="Status"
             />
             </div>
-            <button onClick={addPatient}>Add Patient</button>
-
+            <button onClick={addPatient}
+            className="button-blue"
+            >Add Patient</button>
             {room.pacientInfo && (
               <div className="patients">
                 <h2 className="title">Patients</h2>
                 {Object.keys(room.pacientInfo).map((patientKey) => {
                   const patient = room.pacientInfo[patientKey];
                   return (
-                    <div key={patientKey} className="box">
+                    <div key={patientKey} className="box"
+                    onClick={() => navigateToPatient(hospitalID1, levelID1, roomID1, patientKey)}
+                    >
                       <h3
-                        onClick={() => navigateToPatient(hospitalID1, levelID1, roomID1, patientKey)}
                         style={{ cursor: "pointer", color: "blue" }}
                       >
                         Patient: {patient.pacientName}
@@ -337,7 +363,7 @@ function HospitalData() {
             <p>Status: {patient.pacientStatus}</p>
             <button
               onClick={() => setEditingStatus((prevStatus) => ({ ...prevStatus, [patientID1]: true }))}
-              style={{ color: "orange" }}
+               className="button-blue"
             >
               Edit Status
             </button>
@@ -349,7 +375,9 @@ function HospitalData() {
                   onChange={(e) => setNewStatus(e.target.value)}
                   placeholder="Enter new status"
                 />
-                <button onClick={() => updatePatientStatus(patientID1, newStatus)} style={{ color: "green" }}>
+                <button 
+                onClick={() => updatePatientStatus(patientID1, newStatus)} 
+                className="button-blue">
                   Save Status
                 </button>
               </div>
@@ -359,7 +387,7 @@ function HospitalData() {
                       hospitalID={hospitalID1}
                       levelID={levelID1}
                       roomID={roomID1}
-                      patientID={patientID1} // Pass patient ID to TaskManager
+                      patientID={patientID1}
                     />
                 </div>
           </div>
@@ -368,8 +396,7 @@ function HospitalData() {
         return null;
     }
   };
-
-  return <div className="container">{renderPage()}</div>;
+  return <div className="boxboxCartaj">{renderPage()}</div>;
 }
 
 export default HospitalData;
