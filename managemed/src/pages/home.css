@@ -1,122 +1,132 @@
 .slideshow {
-    width: 750px;
-    height: 400px;
-    overflow: hidden;
-  }
-  
-  .slideshow img {
-    width: 100%;
-    height: auto;
-    object-fit: cover; 
-  }
-  
-  h1 {
-    font-size: 2rem;
-    color: #333;
-  }
-  
-  p {
-    font-size: 1rem;
-    color: #555;
-  }
-  #slideimg{
-    width: 760px;
-    height: 560px;
-  }
-
-.options {
-  width: 200px;
-  position: fixed;
-  top: 1;
-  left: 0;
-  height: 100%;
-  padding-top: 50px;
-  background-color: #f4f4f4;
-  border-right: 2px solid #ddd;
-
-}
-
-.options ul {
-  list-style: none;
-  padding: 0;
-}
-
-.options ul li {
-  padding: 15px;
-  font-size: 18px;
-  cursor: pointer;
-  transition: background-color 0.3s, border-bottom 0.3s;
-  text-align: left;
-}
-
-.options ul li:hover {
-  background-color: #f0f0f0;
-}
-
-.options ul li.active {
-  background-color: #007bff;
-  color: white;
-  border-bottom: 3px solid #fff;  /* Underline effect */
-}
-
-/* Content area */
-.show {
-  padding: 20px;
-  flex-grow: 1;
-  transition: margin-left 0.3s;
-}
-
-.tab-content {
-  display: none;
-}
-
-.tab-content.active {
-  display: block;
-}
-
-/* Specific Tab Content Styles */
-h1, h2, p {
-  margin-bottom: 20px;
-}
-
-h1 {
-  font-size: 2rem;
-}
-
-h2 {
-  font-size: 1.5rem;
+  width: 750px;
+  height: 400px;
+  overflow: hidden;
 }
 
 .slideshow img {
   width: 100%;
   height: auto;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  object-fit: cover; 
+}
+
+h1 {
+  font-size: 2rem;
+  color: #333;
+}
+
+p {
+  font-size: 1rem;
+  color: #555;
+}
+#slideimg{
+  width: 760px;
+  height: 560px;
+}
+
+.options {
+position: absolute;
+width: 200px;
+top:0;
+margin-top: 50px;
+left: 0;
+height: 100%;
+padding-top: 70px;
+background-color: #f4f4f4;
+border-right: 2px solid #ddd;
+
+}
+
+.options ul {
+list-style: none;
+padding: 0;
+}
+
+.options ul li {
+padding: 15px;
+font-size: 18px;
+cursor: pointer;
+transition: background-color 0.3s, border-bottom 0.3s;
+text-align: left;
+}
+
+.options ul li:hover {
+background-color: #f0f0f0;
+}
+
+.options ul li.active {
+background-color: #007bff;
+color: white;
+border-bottom: 3px solid #fff;  /* Underline effect */
+}
+
+/* Content area */
+.show {
+padding: 20px;
+flex-grow: 1;
+transition: margin-left 0.3s;
+}
+
+.tab-content {
+display: none;
+position: absolute;
+top:10%;
+right:20%;
+
+
+}
+
+.tab-content.active {
+display: block;
+position: absolute;
+top:10%;
+right:20%;
+
+}
+
+/* Specific Tab Content Styles */
+h1, h2, p {
+margin-bottom: 20px;
+}
+
+h1 {
+font-size: 2rem;
+}
+
+h2 {
+font-size: 1.5rem;
+}
+
+.slideshow img {
+width: 100%;
+height: auto;
+border-radius: 8px;
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 a {
-  color: #007bff;
-  text-decoration: none;
+color: #007bff;
+text-decoration: none;
 }
 
 a:hover {
-  text-decoration: underline;
+text-decoration: underline;
 }
 
 /* Optional: For the body */
 body {
-  font-family: Arial, sans-serif;
+font-family: Arial, sans-serif;
 }
 
 #map {
-  min-width: 400px;
-  min-height: auto;
+min-width: 400px;
+min-height: auto;
 }
 .hidden-details{
-  display: none;
+display: none;
 }
 .hospital-options ul{
-  font-size: 12px;
-  list-style: none;
-  padding: 0;
+font-size: 12px;
+list-style: none;
+padding: 0;
 }
