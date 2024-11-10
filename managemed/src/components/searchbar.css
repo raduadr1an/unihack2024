@@ -74,3 +74,86 @@
 .view-details-button:hover {
   background-color: #218838;
 }
+body {
+  overflow: auto;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  z-index: 1000;
+  padding-top: 10px;
+}
+
+.modal-content {
+  padding: 1.5rem;
+  max-width: 800px;
+  width: 90%;
+  height: auto;
+  max-height: 95vh;
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.modal-content::-webkit-scrollbar {
+  display: none;
+}
+
+.title {
+  text-align: center;
+  margin: 5px 0;
+}
+
+.button-blue {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.button-blue:hover {
+  background-color: #0056b3;
+}
+
+.search-input {
+  padding: 8px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.search-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.result-card {
+  border: 1px solid #ccc;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 4px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.result-card::-webkit-scrollbar {
+  display: none;
+}
+
