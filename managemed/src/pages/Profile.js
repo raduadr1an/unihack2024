@@ -26,7 +26,7 @@ function Profile() {
   return (
     <div className="profile-container">
       <h1>Welcome, {userData.displayName || userData.email}!</h1>
-      <p>Email: {userData.email}</p>
+      <p>Don't forget to drink water! </p>
    </div>
   );
 }

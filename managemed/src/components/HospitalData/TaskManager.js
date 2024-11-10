@@ -53,8 +53,8 @@ function TaskManager({ hospitalID, levelID, roomID, patientID }) {
 
   return (
     <div>
-      <h2>Tasks for Patient</h2>
-      <input
+      <h2>Patient Tasks</h2>
+      <input className="input-field"
         type="text"
         value={newTask}
         onChange={(e) => setNewTask(e.target.value)}

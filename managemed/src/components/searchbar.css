@@ -1,5 +1,4 @@
 .search-container {
- 
   top: 60px;
   left: 20%;
   right: 20%;
@@ -75,12 +74,13 @@
   background-color: #218838;
 }
 body {
+  background: radial-gradient(lightgrey, white);
   overflow: auto;
 }
 
 .modal-overlay {
   position: fixed;
-  top: 0;
+  top: 20%;
   left: 0;
   right: 0;
   bottom: 0;
@@ -89,6 +89,7 @@ body {
   justify-content: center;
   z-index: 1000;
   padding-top: 10px;
+  overflow-y: auto;
 }
 
 .modal-content {

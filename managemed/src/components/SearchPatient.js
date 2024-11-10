@@ -93,6 +93,11 @@ function SearchPatient() {
         onChange={(e) => setSearchTerm(e.target.value)}
         placeholder="Search for a patient"
         className="search-input"
+	onKeyPress={(e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  }}
       />
       <button onClick={handleSearch} className="search-button">
         Search
