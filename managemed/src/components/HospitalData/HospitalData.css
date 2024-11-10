@@ -719,3 +719,130 @@ button[style*="color: red"]:hover {
 .box button:hover {
   background-color: #d62828;
 }
+.spital{
+  background-color: #f9f9f9;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-top: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+.boxboxCartaj {
+  top: 60px;
+  left: 20%;
+  right: 20%;
+  padding: 20px;
+  position: absolute;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  align-items: center;
+  align-self: center;
+  width: 60%;
+  max-width: 1200px;
+  margin: 20px auto;
+  min-height: calc(100vh - 40px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: auto;
+}
+.to-the-edge{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.nicely-done{
+  display: flex;
+  flex-direction: row;
+}
+.boxboxCartaj .title {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.boxboxCartaj .addPatient,
+.boxboxCartaj .patients {
+  margin-top: 20px;
+}
+.patients{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.boxboxCartaj input[type="text"] {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.boxboxCartaj button {
+  padding: 10px 15px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+
+.button-of-delete{
+  background-color: red !important;
+  color: black !important;
+}
+
+.button-of-delete:hover{
+  background-color: darkred !important;
+  color: white !important;
+}
+.button-blue{
+  background-color: #0056b3;
+  color: white;
+}
+.button-blue:hover{
+  background-color: darkblue !important;
+  color: white;
+}
+
+.list-of-tasks {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+.list-of-tasks li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  background-color: #f9f9f9;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.list-of-tasks li:hover {
+  background-color: #f1f1f1;
+}
+
+.list-of-tasks li input[type="checkbox"] {
+  margin-right: 15px;
+}
+
+.list-of-tasks li span {
+  font-size: 16px;
+  color: #333;
+  flex-grow: 1;
+}
+.list-of-tasks li span.completed {
+  text-decoration: line-through;
+  color: #888;
+}
+
+.list-of-tasks li span.completed-text {
+  font-style: italic;
+  color: #2ecc71;
+}
